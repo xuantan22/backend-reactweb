@@ -1,7 +1,7 @@
-const ProductSchema = require('../models/ProductModel')
+const Products = require('../models/ProductModel')
 module.exports.getAllProduct = async (req, res) => {
     try {
-        let products = await ProductSchema.find();
+        let products = await Products.find();
         if (products < 0) {
             res.status(201).json({ error: "database is empty" });
         } else {
@@ -16,7 +16,7 @@ module.exports.getAllProduct = async (req, res) => {
 module.exports.getProduct = async (req, res) => {
     const { productId } = req.params;
     try {
-        let product = await ProductSchema.findOne({ id: productId });
+        let product = await Products.findOne({ id: productId });
         if (product) {
             res.json(product);
         } else {
@@ -32,7 +32,7 @@ module.exports.getProduct = async (req, res) => {
 module.exports.createProduct = async (req, res) => {
     const { id, name, image, category, new_price, old_price, date, available } = req.body;
     try {
-        let products = await ProductSchema.find();
+        let products = await Products.find();
 
         let id;
         if (products.length > 0) {
@@ -44,7 +44,7 @@ module.exports.createProduct = async (req, res) => {
         } else {
             id = 1;
         }
-        const newProduct = await ProductSchema.create({
+        const newProduct = await Products.create({
             id: id,
             name: name,
             image: image,
@@ -70,7 +70,7 @@ module.exports.createProduct = async (req, res) => {
 
 module.exports.removeProduct = async (req, res) => {
     try {
-        const product = await ProductSchema.findOneAndDelete({ id: req.body.id });
+        const product = await Products.findOneAndDelete({ id: req.body.id });
         if (product) {
             console.log("Product deleted:", product);
             res.status(200).json({ message: "Product successfully deleted", product });
@@ -107,7 +107,7 @@ module.exports.updateProduct = async (req, res) => {
         };
 
         // Find the product by the 'id' field and update it
-        const updatedProduct = await ProductSchema.findOneAndUpdate({ id:productId }, updateData, { new: true });
+        const updatedProduct = await Products.findOneAndUpdate({ id:productId }, updateData, { new: true });
         if (!updatedProduct) {
             return res.status(404).json({ error: "Product not found" });
         }
@@ -121,19 +121,19 @@ module.exports.updateProduct = async (req, res) => {
 
 
 module.exports.getNewCollections = async (req, res) => {
-    let products = await ProductSchema.find({});
+    let products = await Products.find({});
     let newcollection = products.slice(1).slice(-8);
     res.send(newcollection);
 }
 
 module.exports.getPopularInWomen = async (req, res) => {
-    let products = await ProductSchema.find({ category: "women" });
+    let products = await Products.find({ category: "women" });
     let popularProduct = products.slice(0, 4);
     res.send(popularProduct);
 }
 
 module.exports.getRelationProducts = async (req, res) => {
-    let products = await ProductSchema.find({ category: "women" });
+    let products = await Products.find({ category: "women" });
     res.send(products);
 }
 
