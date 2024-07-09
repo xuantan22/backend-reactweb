@@ -5,7 +5,7 @@ const Stripe = require("stripe");
 
 module.exports.placeOrder = async (req, res) => {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
-    const frontend_url = "http://localhost:3000"
+    const frontend_url = "https://commercial-web-tau.vercel.app"
     try {
         const newOrder = new orderModel({
             userId: req.body.userId,
