@@ -30,22 +30,16 @@ module.exports.getProduct = async (req, res) => {
 
 
 module.exports.createProduct = async (req, res) => {
-    const { id, name, image, category, new_price, old_price, date, available } = req.body;
+    const { name, image, category, new_price, old_price, date, available } = req.body;
+    
+    // Kiểm tra các trường bắt buộc từ req.body
+    if (!name || !image || !category || !new_price || !old_price) {
+        return res.status(400).json({ error: "Missing required fields" });
+    }
+
     try {
-        let products = await Products.find();
-
-        let id;
-        if (products.length > 0) {
-            let lastProductArray = products.slice(-1);
-
-            let lastProduct = lastProductArray[0];
-
-            id = lastProduct.id + 1;
-        } else {
-            id = 1;
-        }
+        // Tạo sản phẩm mới và lưu vào cơ sở dữ liệu
         const newProduct = await Products.create({
-            id: id,
             name: name,
             image: image,
             category: category,
@@ -54,15 +48,17 @@ module.exports.createProduct = async (req, res) => {
             date: date,
             available: available
         });
-        console.log("new Product:", newProduct);
-        await newProduct.save();
+        
+        console.log("New Product:", newProduct);
+
+        // Trả về kết quả thành công
         res.json({
             success: true,
-            name: req.body.name
-        })
+            name: newProduct.name // Trả về tên sản phẩm đã tạo
+        });
     } catch (error) {
         console.error('Error:', error);
-        res.status(500).json({ error: "internal server error" });
+        res.status(500).json({ error: "Internal server error" });
     }
 }
 
