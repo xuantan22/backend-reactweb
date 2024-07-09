@@ -124,7 +124,7 @@ module.exports.getCart = async (req, res) => {
 
 module.exports.getCurrentUser = async (req, res) => {
     const { userId } = req.params;
-    let currentUser = await UserSchema.findById({ _id: userId });
+    let currentUser = await UserSchema.findById({ userId });
     res.json(currentUser);
 }
 
