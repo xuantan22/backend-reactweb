@@ -123,23 +123,11 @@ module.exports.getCart = async (req, res) => {
 }
 
 module.exports.getCurrentUser = async (req, res) => {
-    try {
-        const userId = req.params; // Đảm bảo userId không phải là 'undefined'
+    const { userId } = req.params;
+    let currentUser = await UserSchema.findById({ _id: userId });
+    res.json(currentUser);
+}
 
-        if (!mongoose.Types.ObjectId.isValid(userId)) {
-            return res.status(400).send('Invalid User ID');
-        }
-
-        const user = await UserSchema.findById(userId);
-        if (!user) {
-            return res.status(404).send('User not found');
-        }
-
-        res.send(user);
-    } catch (err) {
-        res.status(500).send('Server error');
-    }
-};
 
 module.exports.updateCurrentUser = async (req, res) => {
     const { userId } = req.params;
