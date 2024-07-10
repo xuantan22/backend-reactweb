@@ -4,6 +4,8 @@ const bcrypt = require('bcrypt');
 const { default: Stripe } = require('stripe');
 const { default: orderModel } = require('../models/OrderModel');
 
+
+//đăng ký tài khoản
 module.exports.register = async (req, res) => {
     const { name, email, password } = req.body;
     let check = await UserSchema.findOne({ email: email });
@@ -36,7 +38,7 @@ module.exports.register = async (req, res) => {
 
 // }
 
-
+//đăng nhập tài khoản
 module.exports.login = async (req, res) => {
     const { email, password } = req.body;
     let user = await UserSchema.findOne({ email: email });
@@ -60,7 +62,7 @@ module.exports.login = async (req, res) => {
 }
 
 
-
+//thêm sản phẩm vào giỏ hàng
 module.exports.addToCart = async (req, res) => {
     // console.log(req.body);
     try {
@@ -79,6 +81,7 @@ module.exports.addToCart = async (req, res) => {
     }
 }
 
+//giảm số lượng sản phẩm trong giỏ hàng
 module.exports.removeFromCart = async (req, res) => {
     // console.log(req.body);
     try {
@@ -92,6 +95,7 @@ module.exports.removeFromCart = async (req, res) => {
     }
 }
 
+//xóa sản phẩm khỏi giỏ hàng
 module.exports.deleteFromCart = async (req, res) => {
     try {
         let userData = await UserSchema.findOne({ _id: req.user.id });
@@ -113,11 +117,13 @@ module.exports.deleteFromCart = async (req, res) => {
 }
 
 
+//lấy giỏ hàng của người dùng
 module.exports.getCart = async (req, res) => {
     let userData = await UserSchema.findOne({ _id: req.user.id });
     res.json(userData.cartData);
 }
 
+//lấy user đăng nhập hiện tại
 module.exports.getCurrentUser = async (req, res) => {
     try {
         const {userId} = req.params; 
@@ -136,7 +142,7 @@ module.exports.getCurrentUser = async (req, res) => {
     }
 };
 
-
+//update thông tin user hiện tại
 module.exports.updateCurrentUser = async (req, res) => {
     const { userId } = req.params;
     const { name, email, username, image, birthday, gender, phonenumber, cartData } = req.body;
@@ -176,6 +182,7 @@ module.exports.updateCurrentUser = async (req, res) => {
 
 
 //admin-controller 
+//lấy tất cả user từ database
 module.exports.getAllUsers = async (req, res) => {
     try {
         let allUsers = await UserSchema.find();
@@ -189,7 +196,7 @@ module.exports.getAllUsers = async (req, res) => {
     }
 }
 
-
+//xóa sản phẩm khỏi database
 module.exports.removeUser = async (req, res) => {
     try {
         const user = await UserSchema.findOneAndDelete({ _id: req.body.id });
@@ -213,7 +220,7 @@ module.exports.changePassword = async (req, res) => {
     }
 }
 
-
+//đặt hàng các sản phẩm trong giỏ hàng
 module.exports.placeOrder = async (req, res) => {
     const frontend_url = "http://localhost:3000"
     try {
