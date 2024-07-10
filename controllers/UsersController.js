@@ -13,18 +13,14 @@ module.exports.register = async (req, res) => {
     if(password.length<8){
         return res.json({success:false, message:"please enter strong password"})
     }
-    // if (name && email && password) {
-    //     //     let cart = {};
-    //     // for (let i = 0; i < 300; i++) {
-    //     //     cart[i] = 0;
-    //     // }
+  
         const passwordhash = await bcrypt.hash(password, 10);
         console.log(passwordhash);
         const user = await UserSchema.create({
             name: name,
             email: email,
             password: passwordhash,
-            // cartData: cart
+        
         })
         await user.save();
         const userId = user._id;
@@ -124,7 +120,7 @@ module.exports.getCart = async (req, res) => {
 
 module.exports.getCurrentUser = async (req, res) => {
     try {
-        const {userId} = req.params; // Đảm bảo userId không phải là 'undefined'
+        const {userId} = req.params; 
 
         if (!mongoose.Types.ObjectId.isValid(userId)) {
             return res.status(400).send('Invalid User ID');
@@ -146,7 +142,6 @@ module.exports.updateCurrentUser = async (req, res) => {
     const { name, email, username, image, birthday, gender, phonenumber, cartData } = req.body;
 
     try {
-        // Xây dựng đối tượng cập nhật với các thuộc tính được truyền vào
         const updateUser = {};
         if (name) updateUser.name = name;
         if (email) updateUser.email = email;
@@ -157,19 +152,16 @@ module.exports.updateCurrentUser = async (req, res) => {
         if (phonenumber) updateUser.phonenumber = phonenumber;
         if (cartData) updateUser.cartData = cartData;
 
-        // Thực hiện cập nhật thông tin người dùng
         const updatedUser = await UserSchema.findByIdAndUpdate(
             userId,
             { $set: updateUser },
             { new: true, runValidators: true }
         );
 
-        // Kiểm tra xem người dùng có tồn tại hay không
         if (!updatedUser) {
             return res.status(404).json({ error: "User not found" });
         }
 
-        // Trả về phản hồi thành công
         res.status(200).json({ success: "User is updated", updatedUser });
 
     } catch (error) {
