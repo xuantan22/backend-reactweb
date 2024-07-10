@@ -18,7 +18,6 @@ exports.createReview = async (req, res) => {
             return res.status(404).json({ message: 'Product not found' });
         }
 
-        // Tạo review mới
         const review = new ReviewSchema({
             rating,
             comment,
@@ -43,6 +42,7 @@ exports.getReviews = async (req, res) => {
     }
 };
 
+//lấy review theo sản phẩm
 exports.getReviewsByProduct = async (req, res) => {
     try {
         const { productId } = req.params;
