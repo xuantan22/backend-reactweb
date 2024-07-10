@@ -1,4 +1,6 @@
 const Products = require('../models/ProductModel')
+
+//lấy tất cả sản phẩm
 module.exports.getAllProduct = async (req, res) => {
     try {
         let products = await Products.find();
@@ -12,7 +14,7 @@ module.exports.getAllProduct = async (req, res) => {
         res.status(500).json({ error: "database is not exist" })
     }
 }
-
+//lấy sản phẩm theo  productId
 module.exports.getProduct = async (req, res) => {
     const { productId } = req.params;
     try {
@@ -28,7 +30,7 @@ module.exports.getProduct = async (req, res) => {
     }
 }
 
-
+//tạo sản phẩm bên admin
 module.exports.createProduct = async (req, res) => {
     const { name, image, category, new_price, old_price, date, available } = req.body;
     
@@ -63,7 +65,7 @@ module.exports.createProduct = async (req, res) => {
 }
 
 
-
+//xóa sản phẩm bên admin
 module.exports.removeProduct = async (req, res) => {
     try {
         const product = await Products.findOneAndDelete({ id: req.body.id });
@@ -79,7 +81,7 @@ module.exports.removeProduct = async (req, res) => {
     }
 };
 
-
+//cập nhật sản phẩm bên admin
 module.exports.updateProduct = async (req, res) => {
     const { productId } = req.params;
 
@@ -91,7 +93,6 @@ module.exports.updateProduct = async (req, res) => {
     }
 
     try {
-        // Convert data types if necessary
         const updateData = {
             name: name,
             image: image,
@@ -115,19 +116,21 @@ module.exports.updateProduct = async (req, res) => {
     }
 }
 
-
+//lấy một vài sản phẩm để render ra phần new collections
 module.exports.getNewCollections = async (req, res) => {
     let products = await Products.find({});
     let newcollection = products.slice(1).slice(-8);
     res.send(newcollection);
 }
 
+//lấy một vài sản phẩm để render ra phần popular Women Cloth
 module.exports.getPopularInWomen = async (req, res) => {
     let products = await Products.find({ category: "women" });
     let popularProduct = products.slice(0, 4);
     res.send(popularProduct);
 }
 
+//lấy các sản phẩm liên quan theo category
 module.exports.getRelationProducts = async (req, res) => {
     let products = await Products.find({ category: "women" });
     res.send(products);
